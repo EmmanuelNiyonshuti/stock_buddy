@@ -1,5 +1,10 @@
+# Ignore virtual environment
+.venv/
+
+# Ignore specific files and directories
 backend/.env
 setupdb.sql
 __pycache__/
-.gitignore
-.venv/
+
+# Exclude the .gitignore file itself
+!.gitignore
