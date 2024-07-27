@@ -1,5 +1,5 @@
- /__pycache__/
- .gitignore
- .env
- .venv/setupdb.sql
+backend/.env
 setupdb.sql
+__pycache__/
+.gitignore
+.venv/
