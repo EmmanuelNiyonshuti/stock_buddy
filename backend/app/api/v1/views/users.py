@@ -14,7 +14,7 @@ def create_user():
     req_data = ["username", "email", "password", "first_name","last_name"]
     for field in req_data:
         if field not in data:
-            return jsonify({"error": "Missing {field}"}), 400
+            return jsonify({"error": f"Missing {field}"}), 400
     try:
         validate_email(data["email"])
     except EmailNotValidError:
@@ -39,29 +39,43 @@ def create_user():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Failed to create a user", "details": str(e)}), 500
+    return jsonify({"msg": "created successfully"}), 201
+
+@app_views.route("users/auth", methods=["POST"])
+def auth():
+    if not request.is_json:
+        abort(400)
+    data = request.get_json()
+    for field in ["email", "password"]:
+        if field not in data:
+            return jsonify({"error": f"Missing {field}"}), 400
+    user = User.query.filter_by(email=data["email"]).first()
+    if not user and bcrypt.check_password_hash(user.password, data["password"]):
+        return jsonify({"error": "check email and password"}), 400
     access_token = create_access_token(identity=user.id)
     return jsonify({
         "access_token": access_token,
         "id": user.id
-    }), 201 
+    }), 200
 
 @app_views.route("/users/<uuid:user_id>")
 @jwt_required()
 def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "user not found"}), 404
+    curr_user_id = get_jwt_identity()
+    if str(curr_user_id) != str(user_id):
+        return jsonify({"error": "unauthorized"}), 401
+    return jsonify(user.to_dict()), 200
+
+@app_views.route("/users/<uuid:user_id>", methods=["PUT", "DELETE"])
+@jwt_required()
+def update_user(user_id):
     curr_user_id = get_jwt_identity()
     if str(curr_user_id) != str(user_id):
         return jsonify({"error": "unauthorized"}), 401
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "user not found"}), 404
-    return jsonify(user.to_dict()), 200
-    # return jsonify({
-    #         "username": user.username,
-    #         "email": user.email,
-    #         "password": user.password,
-    #         "first_name": user.first_name,
-    #         "last_name": user.last_name,
-    #         "role": user.role,
-    #         "is_active": user.is_active,
-    #         "is_verified": user.is_verified
-    # }), 200
+    
