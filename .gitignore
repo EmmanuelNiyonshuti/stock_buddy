@@ -1,4 +1,5 @@
  /__pycache__/
  .gitignore
  .env
- .venv/
+ .venv/setupdb.sql
+setupdb.sql
