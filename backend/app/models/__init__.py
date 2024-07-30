@@ -12,7 +12,7 @@ Relationships:
 """
 from app import db
 from .base_model import BaseModel
-from .user import User
+from .user import User, UserRole
 from .business import Business
 from .product import Product
 from .product_category import Category
@@ -27,12 +27,13 @@ User.business = db.relationship("Business", back_populates="owner", cascade="all
 
 #business relationships
 Business.owner = db.relationship("User", back_populates="business")
-Business.products = db.relationship("Product", back_populates="business")
+# Business.products = db.relationship("Product", back_populates="business")
 Business.stocks = db.relationship("Stock", back_populates="business", cascade="all, delete-orphan")
 Business.location = db.relationship("Location", back_populates="business")
 
 # product relationships
-Product.business = db.relationship("Business", back_populates="products")
+# Product.business = db.relationship("Business", back_populates="products")
+Product.stock = db.relationship("Stock", back_populates="products")
 Product.supplier = db.relationship("Supplier", back_populates="products")
 Product.category = db.relationship("Category", back_populates="products")
 
@@ -44,8 +45,10 @@ Category.products = db.relationship("Product", back_populates="category")
 
 #stock relationships
 Stock.business = db.relationship("Business", back_populates="stocks")
+Stock.products = db.relationship("Product", back_populates="stock", cascade="all, delete-orphan")
 Stock.movements = db.relationship("StockMovement", back_populates="stock", cascade="all, delete-orphan")
 Stock.location = db.relationship("Location", back_populates="stocks")
+
 
 #stock movement
 StockMovement.stock = db.relationship("Stock", back_populates="movements")

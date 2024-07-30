@@ -22,7 +22,8 @@ class Product(BaseModel, db.Model):
     is_perishable = db.Column(db.Boolean, default=False)
 
 
-    business_id = db.Column(db.String(60), db.ForeignKey("business.id"), nullable=False)
+    # business_id = db.Column(db.String(60), db.ForeignKey("business.id"), nullable=False)
+    stock_id = db.Column(db.String(60), db.ForeignKey("stocks.id"), nullable=False)
     supplier_id = db.Column(db.String(60), db.ForeignKey('suppliers.id'), nullable=False)
     category_id = db.Column(db.String(60), db.ForeignKey('categories.id'), nullable=False)
 
