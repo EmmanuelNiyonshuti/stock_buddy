@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -20,3 +21,9 @@ class Config:
     MAIL_PASSWORD=os.getenv("MAIL_PWD")
     MAIL_DEFAULT_SENDER=os.getenv("MAIL_USER")
     WTF_CSRF_CHECK_DEFAULT=False
+
+    JWT_KEY_SECURE=False
+    JWT_TOKEN_LOCATION=["cookies"]
+    JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY")
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
+    JWT_COOKIE_CSRF_PROTECT=True
