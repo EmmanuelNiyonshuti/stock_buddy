@@ -31,8 +31,8 @@ class BaseModel(db.Model):
     def to_dict(self):
         dictionary = self.__dict__.copy()
         dictionary.pop("_sa_instance_state", None)
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
+        dictionary["created_at"] = self.created_at.strftime("%Y-%m-%d %H:%M")
+        dictionary["updated_at"] = self.updated_at.strftime("%Y-%m-%d %H:%M")
         return dictionary
     
     @classmethod

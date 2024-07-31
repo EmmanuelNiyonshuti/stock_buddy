@@ -31,9 +31,6 @@ class UserRole(Enum):
     EMPLOYEE = "employee"
 
 class User(BaseModel, UserMixin):
-    """
-    User model for storing user-related information and methods.
-    """
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
@@ -43,19 +40,16 @@ class User(BaseModel, UserMixin):
     is_active = db.Column(db.Boolean, default=True)
     role = db.Column(db.Enum(UserRole), nullable=False, default=UserRole.OWNER)
 
-
-
-
     def to_dict(self):
-        dictionary = self.__dict__.copy()
-        dictionary.pop("_sa_instance_state", None)
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
-        if isinstance(self.role, UserRole):
-            dictionary["role"] = self.role.to_dict()
-        else:
-            dictionary["role"] = self.role
-        return dictionary
+        d = super().to_dict()
+        d["role"] = self.role.value if self.role else None
+        d["username"] = self.username
+        d.pop("password", None)
+        d["first_name"] = self.first_name
+        d["last_name"] = self.last_name
+        d["is_verified"] = self.is_verified
+        d["is_active"] = self.is_active
+        return d
 
     @validates("email")
     def validate_email(self, key, email):
