@@ -3,7 +3,8 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from app import db
 from app.api.v1.views import app_views
 from app.models import Business, User
-from app.schemas import business_schema, businesses_schema, user_schema
+from app.schemas import (business_schema, businesses_schema,
+                        user_schema, stocks_schema)
 
 @app_views.route("/businesses", methods=["POST"])
 @jwt_required()
@@ -77,11 +78,35 @@ def update_business(business_id):
             return jsonify({"error": "Could not delete the business", "details": str(e)}), 500
         return jsonify({}), 200
 
-@app_views.route("/business/<business_id/stocks")
+@app_views.route("/business/<uuid:business_id/stocks", methods=["POST"])
 @jwt_required()
-def business_stocks(business_id):
-    """ retrieve a business stocks """
+def create_stock(business_id):
+    """ create a stock """
     business = Business.get(business_id)
     if business is None:
         abort(404, description="business not found")
-    return stock_schema.jsonify(business.stocks)
+    if not request.is_json:
+        abort(400, description="Invalid JSON")
+    data = request.get_json()
+    if "quantity" not in data:
+        return jsonify({"error": 'Missing a required field'})
+    try:
+        new_stock = Stock(data["quantity"], business=business)
+        db.session.add(new_stock)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+                        "error": "something went wrong! couldn't create a stock",
+                        "details": str(e)
+                        }), 500
+    return stock_schema.jsonify(new_stock), 201
+
+@app_views.route("/business/<uuid:business_id/stocks")
+@jwt_required()
+def all_stocks(business_id):
+    """ retrieve all stocks of a particular business"""
+    business = Business.get(business_id)
+    if business is None:
+        abort(404, description="business not found")
+    return stocks_schema.jsonify(business.stocks)
