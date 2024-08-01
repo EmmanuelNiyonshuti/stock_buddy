@@ -3,17 +3,15 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.api.v1.views import app_views
 from app.models import User, Business
-from app.schemas import user_schema, users_schema
+from app.schemas import user_schema, users_schema, business_schema, businesses_schema
 
 @app_views.route("/users/<uuid:user_id>")
 @jwt_required()
 def get_user(user_id):
     curr_user_id = get_jwt_identity()
+    user = User.get(user_id)
     if str(curr_user_id) != str(user_id):
         abort(403, description="Retrieving a user requires you to be that 'user'or 'admin'.")
-    user = User.query.get(user_id)
-    if not user:
-        abort(404, description="user not found")
     return jsonify(user.to_dict()), 200
 
 @app_views.route("/users/<uuid:user_id>", methods=["PUT", "DELETE"])
@@ -22,7 +20,7 @@ def update_user(user_id):
     curr_user_id = get_jwt_identity()
     if str(curr_user_id) != str(user_id):
         abort(403, description="Updating user info requires you to be that 'user'.")
-    user = User.query.get(user_id)
+    user = User.get(user_id)
     if request.method == "PUT":
         if not request.is_json:
             abort(400, description="Invalid JSON")
@@ -44,17 +42,13 @@ def update_user(user_id):
             return jsonify({"error": "could not delete the user", "details": str(e)}), 500
         return jsonify({}), 200
 
-
-
-
 @app_views.route("/users/<uuid:user_id>/business")
 @jwt_required()
 def user_business(user_id):
     curr_user_id = get_jwt_identity()
     if str(user_id) != str(curr_user_id):
         abort(403, description="You don't have the permission to access the requested resource")
-    user = User.query.get(user_id)
-    user_roles = ["owner", "admin", "manager", "employee"]
-    if user.role in user_roles:
-        abort(403, description="You don't have the permission to access the requested resource")
+    user = User.get(user_id)
+    if user is None:
+        abort(404, description="user not found")
     return businesses_schema.jsonify(user.business)

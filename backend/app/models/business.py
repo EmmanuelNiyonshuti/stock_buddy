@@ -8,3 +8,10 @@ class Business(BaseModel, db.Model):
     description = db.Column(db.String(300), nullable=False)
 
     owner_id = db.Column(db.String(60), db.ForeignKey("users.id"), nullable=False)
+
+    def to_dict(self):
+        d = super().to_dict()
+        d["business_type"] = self.business_type
+        d["name"] = self.name
+        d["description"] = self.description
+        d["owner_id"] = self.owner_id
