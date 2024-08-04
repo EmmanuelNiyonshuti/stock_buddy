@@ -6,7 +6,7 @@ from app.models import Business, User
 from app.schemas import (business_schema, businesses_schema,
                         user_schema, stocks_schema)
 
-@app_views.route("/businesses", methods=["POST"])
+@app_views.route("/businesses", methods=["POST"], strict_slashes=False)
 @jwt_required()
 def create_business(): 
     """ Create a business """
@@ -30,12 +30,12 @@ def create_business():
         )
         db.session.add(business)
         db.session.commit()
+        return business_schema.jsonify(business)
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "couldn't create a business", "details": str(e)}), 500
-    return business_schema.jsonify(business)
 
-@app_views.route("/businesses/<uuid:business_id>")
+@app_views.route("/businesses/<uuid:business_id>", strict_slashes=False)
 @jwt_required()
 def get_business(business_id):
     """ retrieve a business"""
@@ -47,7 +47,7 @@ def get_business(business_id):
         abort(403, description="you don't have the required permissions to access this resource!")
     return business_schema.jsonify(business)
 
-@app_views.route("/businesses/<uuid:business_id>", methods=["PUT", "DELETE"])
+@app_views.route("/businesses/<uuid:business_id>", methods=["PUT", "DELETE"], strict_slashes=False)
 @jwt_required()
 def update_business(business_id):
     """ update or delete a business """
@@ -65,20 +65,20 @@ def update_business(business_id):
             for k, v in data.items():
                 setattr(business, k, v)
             db.session.commit()
+            return business_schema.jsonify(business), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": "Could not edit the business details", "details": str(e)}), 500
-        return business_schema.jsonify(business), 200
     elif request.method == "DELETE":
         try:
             db.session.delete(business)
             db.session.commit()
+            return jsonify({}), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": "Could not delete the business", "details": str(e)}), 500
-        return jsonify({}), 200
 
-@app_views.route("/business/<uuid:business_id/stocks", methods=["POST"])
+@app_views.route("/business/<uuid:business_id>/stocks", methods=["POST"], strict_slashes=False)
 @jwt_required()
 def create_stock(business_id):
     """ create a stock """
@@ -89,20 +89,24 @@ def create_stock(business_id):
         abort(400, description="Invalid JSON")
     data = request.get_json()
     if "quantity" not in data:
-        return jsonify({"error": 'Missing a required field'})
+        return jsonify({"error": "Missing a required field"})
     try:
-        new_stock = Stock(data["quantity"], business=business)
+        new_stock = Stock(
+                        data["quantity"],
+                        business=business,
+                        location=business.location
+                        )
         db.session.add(new_stock)
         db.session.commit()
+        return stock_schema.jsonify(new_stock), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({
                         "error": "something went wrong! couldn't create a stock",
                         "details": str(e)
                         }), 500
-    return stock_schema.jsonify(new_stock), 201
 
-@app_views.route("/business/<uuid:business_id/stocks")
+@app_views.route("/business/<uuid:business_id>/stocks", strict_slashes=False)
 @jwt_required()
 def all_stocks(business_id):
     """ retrieve all stocks of a particular business"""
