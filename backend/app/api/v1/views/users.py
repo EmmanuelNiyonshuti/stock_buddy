@@ -29,18 +29,18 @@ def update_user(user_id):
             for attr, val in data.items():
                 setattr(user, attr, val)
             db.session.commit()
+            return jsonify(user.to_dict()), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": "could not update user info", "details": str(e)}), 500
-        return jsonify(user.to_dict()), 200
     elif request.method == "DELETE":
         try:
             db.session.delete(user)
             db.session.commit()
+            return jsonify({}), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": "could not delete the user", "details": str(e)}), 500
-        return jsonify({}), 200
 
 @app_views.route("/users/<uuid:user_id>/business")
 @jwt_required()

@@ -8,9 +8,11 @@ class Stock(BaseModel):
     location_id = db.Column(db.String(60), db.ForeignKey("locations.id"), nullable=False)
 
     @validates("quantity")
-    def validate_quantity(self, key, quantity):
+    def validate_quantity(self, key, val):
+        if not isinstance(val, (int, float)):
+            raise TypeError("Invalid quantity")
         if quantity < 0:
-            raise ValueError(f"{key} cannot be negative")
+            raise ValueError("quantity cannot be negative")
         return quantity
 
     def record_movement(self, quantity_change, movement_type, reason):

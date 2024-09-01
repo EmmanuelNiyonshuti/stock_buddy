@@ -7,4 +7,4 @@ setupdb.sql
 __pycache__/
 
 # Exclude the .gitignore file itself
-!.gitignore
+.gitignore

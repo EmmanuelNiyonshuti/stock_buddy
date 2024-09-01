@@ -30,7 +30,7 @@ def create_app(config=Config):
     bcrypt.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "0.0.0.0"}})
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     from .api.v1.views import app_views
     app.register_blueprint(app_views)

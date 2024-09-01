@@ -21,16 +21,15 @@ class Product(BaseModel, db.Model):
     expiry_date = db.Column(db.Date, nullable=True)
     is_perishable = db.Column(db.Boolean, default=False)
 
-
-    # business_id = db.Column(db.String(60), db.ForeignKey("business.id"), nullable=False)
     stock_id = db.Column(db.String(60), db.ForeignKey("stocks.id"), nullable=False)
     supplier_id = db.Column(db.String(60), db.ForeignKey('suppliers.id'), nullable=False)
     category_id = db.Column(db.String(60), db.ForeignKey('categories.id'), nullable=False)
 
-
     @validates("unit_cost")
-    def validate_nonnegative(self, key, value):
-        if value < 0:
-            raise ValueError(f"{key} cannot be negative")
-        return value
+    def validate_unit_cost(self, key, val):
+        if not isinstance(val, int, float):
+            raise TypeError("Invalid data")
+        if val < 0:
+            raise ValueError("quantity cannot be negative")
+        return unit_cost
 

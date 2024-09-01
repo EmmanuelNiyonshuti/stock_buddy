@@ -44,10 +44,10 @@ def register():
                 )
         db.session.add(user)
         db.session.commit()
+        return user_schema.jsonify(user), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Failed to create a user", "details": str(e)}), 500
-    return user_schema.jsonify(user), 201
 
 @app_views.route("/auth/login", methods=["POST"])
 def login():
