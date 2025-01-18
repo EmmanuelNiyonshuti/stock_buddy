@@ -1,17 +1,18 @@
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
+
 load_dotenv()
 
-db_user = os.getenv("STOCK_MYSQL_DEV_USER")
-db_pwd = os.getenv("STOCK_MYSQL_DEV_PWD")
-db_host = os.getenv("STOCK_MYSQL_DEV_HOST")
-db_name = os.getenv("STOCK_MYSQL_DEV_DB")
+db_username = os.getenv("MYSQL_DEV_USERNAME")
+db_pwd = os.getenv("MYSQL_DEV_PWD")
+db_host = os.getenv("MYSQL_DEV_HOST")
+db_name = os.getenv("MYSQL_DEV_DB")
 
 class Config:
     SECRET_KEY=os.getenv("SECRET_KEY")
     SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT")
-    SQLALCHEMY_DATABASE_URI="mysql+pymysql://{}:{}@{}/{}".format(db_user,
+    SQLALCHEMY_DATABASE_URI="mysql+pymysql://{}:{}@{}/{}".format(db_username,
         db_pwd, db_host, db_name)
 
     MAIL_SERVER="smtp.googlemail.com"
@@ -23,7 +24,7 @@ class Config:
     WTF_CSRF_CHECK_DEFAULT=False
 
     JWT_KEY_SECURE=False
-    JWT_TOKEN_LOCATION=["cookies"]
+    # JWT_TOKEN_LOCATION=["cookies"]
     JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY")
     JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
     JWT_COOKIE_CSRF_PROTECT=True
