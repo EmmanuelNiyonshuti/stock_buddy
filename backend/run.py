@@ -6,40 +6,15 @@ from flask_jwt_extended import(get_jwt,
                             get_jwt_identity,
                             create_access_token,
                             set_access_cookies)
-from werkzeug.exceptions import NotFound, BadRequest, Forbidden, BadGateway
-from flask import jsonify
 from app import create_app, db 
+from app.error_handlers import register_error_handlers
+from app.models.product import Product
+from app.models.transaction import Transaction
+from app.models.inventory import Inventory
 
 app = create_app()
 
-@app.errorhandler(NotFound)
-def not_found_error(error):
-    """
-    Not found error
-    """
-    return jsonify(
-        {
-            "error": "Not found",
-            "message": error.description if error.description else "resource does not exist!"
-            }), 404
-
-
-@app.errorhandler(Forbidden)
-def forbidden_error(error):
-    """ """
-    return jsonify(
-        {
-        "error": "InsufficientPermissions.",
-        "message": error.description if error.description else "You do not have permission to access this resource"
-    }), 403
-
-@app.errorhandler(BadRequest)
-def badrequest_error(error):
-    return jsonify(
-        {
-            "error": "Bad request",
-            "message": error.description if error.description else  "Request body could not be read properly.",
-            }), 400
+register_error_handlers(app)
 
 @app.after_request
 def refresh_exp_jwts(resp):
