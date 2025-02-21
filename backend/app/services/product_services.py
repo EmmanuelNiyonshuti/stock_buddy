@@ -33,4 +33,3 @@ def update_product(product_id, data):
         setattr(product, k, v)
     db.session.commit()
     return product
-
