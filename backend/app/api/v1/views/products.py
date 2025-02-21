@@ -19,7 +19,7 @@ def add_product_view():
 @handle_exceptions
 def get_all_products_view():
     products = get_all_products()
-    return create_resp([product for product in products])
+    return create_resp(products)
 
 @app_views.route("/products/<string:product_id>", methods=["GET"], strict_slashes=False)
 @handle_exceptions

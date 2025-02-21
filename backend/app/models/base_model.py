@@ -48,7 +48,8 @@ class BaseModel(db.Model):
     @classmethod
     def all(cls):
         """Retrieve all objects as dictionaries."""
-        return [obj.to_dict() for obj in cls.query.all()]
+        # return [obj.to_dict() for obj in cls.query.all()]
+        return cls.query.all()
 
     def __str__(self):
         return f"<{self.__class__.__name__}> id: {self.id} created_at: {self.created_at} updated_at: {self.updated_at}"

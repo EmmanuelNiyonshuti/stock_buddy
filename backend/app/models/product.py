@@ -19,8 +19,8 @@ class Product(BaseModel):
     inventory = relationship(
                             "Inventory",
                             backref="product",
-                            cascade="all, delete-orphan",
-                            lazy="dynamic"
+                            uselist=False,
+                            cascade="all, delete-orphan"
                             )
     def __repr__(self):
         return f"<Product {self.name}, SKU: {self.sku}, Price: {self.price}"

@@ -1,8 +1,10 @@
+from flask import request, abort
 from app import db
 from app.models.transaction import Transaction
 from app.models.inventory import Inventory
 from app.models.product import Product
 from app.utils.required_data import require_data, require_json
+from app.utils.pagination import paginate_query
 
 def add_transaction(product_id, transaction_details):
     product = Product.get(product_id)
@@ -24,4 +26,14 @@ def add_transaction(product_id, transaction_details):
     return new_transaction
 
 def get_all_transactions(product_id):
-    pass
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+    query = Transaction.query.filter_by(product_id=product_id)
+    return paginate_query(query, page, per_page)
+
+def get_transaction(product_id, transaction_id):
+    transaction = Transaction.query.filter_by(product_id=product_id, id=transaction_id).first()
+    if not transaction:
+        abort(404, description="Transaction not found")
+    return transaction
+

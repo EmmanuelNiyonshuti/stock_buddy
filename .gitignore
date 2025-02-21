@@ -1,7 +1,0 @@
-.env
-.venv/
-
-setupdb.sql
-__pycache__/
-
-.gitignore
