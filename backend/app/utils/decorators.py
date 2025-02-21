@@ -19,11 +19,10 @@ def handle_exceptions(func):
 
         except SQLAlchemyError as e:
             db.session.rollback()
-            return jsonify({"error": "Database error", "message": "A database error occurred."}), 500
+            return jsonify({"error": "Database error", "message": "An internal server error", "details": str(e)}), 500
 
         except Exception as e:
-            print(str(e))
-            return jsonify({"error": "Unexpected error", "message": "An internal server error occurred."}), 500
+            return jsonify({"error": "Unexpected error", "message": "An internal server error occurred.", "details": str(e)}), 500
 
     return wrapper
 

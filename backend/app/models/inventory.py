@@ -9,7 +9,6 @@ class Inventory(BaseModel):
 
     product_id: Mapped[str] = mapped_column(String(60), ForeignKey('products.id'), nullable=False)
 
-
     def __repr__(self):
         return f"<Inventory Product id = {self.product_id}, stock level = {self.stock_level}>"
 
@@ -20,4 +19,6 @@ class Inventory(BaseModel):
         elif transaction_type == "Sale":
             self.stock_level -= quantity
         if self.stock_level < self.low_stock_alert:
-            pass # sending notification alerts
+            print("sending low stock level notification alerts")
+        db.session.commit()
+    
