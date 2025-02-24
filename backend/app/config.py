@@ -11,7 +11,7 @@ db_name = os.getenv("MYSQL_DEV_DB")
 
 class Config:
     # SECRET_KEY=os.getenv("SECRET_KEY")
-    SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT")
+    # SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT")
     SQLALCHEMY_DATABASE_URI="mysql+pymysql://{}:{}@{}/{}".format(db_username,
         db_pwd, db_host, db_name)
 
@@ -26,5 +26,5 @@ class Config:
     # JWT_KEY_SECURE=False
     # JWT_TOKEN_LOCATION=["cookies"]
     JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY")
-    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=15)
     JWT_COOKIE_CSRF_PROTECT=True

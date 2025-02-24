@@ -1,4 +1,4 @@
-from werkzeug.exceptions import NotFound, BadRequest, Forbidden, BadGateway
+from werkzeug.exceptions import NotFound, BadRequest, Forbidden, BadGateway, MethodNotAllowed
 from flask import jsonify
 
 
@@ -27,8 +27,15 @@ def badrequest_error(error):
             "message": error.description if error.description else  "Request body could not be read properly.",
             }), 400
 
+def method_not_allowed(error):
+    return jsonify({
+        "error": "Method Not allowed",
+        "message": error.description if error.description else "Method not allowed."
+    }), 405
+
 def register_error_handlers(app):
     """Register all error handlers with the flask app."""
     app.register_error_handler(NotFound, not_found_error)
     app.register_error_handler(Forbidden, forbidden_error)
     app.register_error_handler(BadRequest, badrequest_error)
+    app.register_error_handler(MethodNotAllowed, method_not_allowed)

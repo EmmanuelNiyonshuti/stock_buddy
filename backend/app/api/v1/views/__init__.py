@@ -6,3 +6,4 @@ from app.api.v1.views.auth import *
 from app.api.v1.views.products import *
 from app.api.v1.views.transactions import *
 from app.api.v1.views.inventory import *
+from app.api.v1.views.user import *

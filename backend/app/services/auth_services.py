@@ -7,7 +7,6 @@ from app.utils.required_data import require_json, require_data
 from app import db, bcrypt
 from app.models.user import User
 
-
 def register_user(user_details):
     require_json()
     require_data(user_details, ["username", "email", "password"])
@@ -32,10 +31,8 @@ def login_user(login_details):
     require_json()
     require_data(login_details, ["email", "password"])
     user = User.query.filter_by(email=login_details["email"]).first()
-    if not user:
-        abort(401, description="Invalid email")
-    if not bcrypt.check_password_hash(user.password, login_details["password"]):
-        abort(401, description="Invalid password")
+    if not user or not bcrypt.check_password_hash(user.password, login_details["password"]):
+        abort(401, description="Invalid email or password")
     access_token = create_access_token(identity=user.id)
     refresh_token = create_refresh_token(identity=user.id)
     return {
@@ -43,11 +40,5 @@ def login_user(login_details):
         "refresh_token": refresh_token
     }
 
-def user_profile(user_id):
-    user = User.get(user_id)
-    return {
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "created_at": user.created_at,
-    }
+def logout_user():
+    pass
