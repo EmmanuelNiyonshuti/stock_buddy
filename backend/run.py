@@ -1,6 +1,12 @@
 """
- imports create_app function and runs the Flask application.
- """
+Flask application entry point.
+
+This module imports and initializes the Flask application, registers error handlers, 
+and ensures the database tables are created before running the server. 
+
+It also includes a function to refresh JWTs automatically when their expiration time 
+is near, helping maintain user sessions seamlessly.
+"""
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import(get_jwt,
                             get_jwt_identity,
@@ -32,4 +38,4 @@ def refresh_exp_jwts(resp):
 if __name__== "__main__":
     with app.app_context():
         db.create_all()
-        app.run(debug=True)
+        app.run()

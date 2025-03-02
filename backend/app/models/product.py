@@ -1,3 +1,17 @@
+"""
+Product model for managing product details.
+
+This module defines the Product model, which represents items available for sale. 
+It includes:
+- `name`: Product name
+- `description`: Optional product details
+- `price`: Cost of the product (stored as Decimal with 2 decimal places)
+- `sku`: Unique Stock Keeping Unit identifier
+- Relationships:
+  - `transaction`: Links to transactions involving the product
+  - `inventory`: Links to the inventory record for the product
+"""
+
 from app import db
 from app.models import BaseModel
 from sqlalchemy import Integer, String, Float, Numeric, Text

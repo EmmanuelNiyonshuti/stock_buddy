@@ -1,3 +1,13 @@
+"""
+Application Configuration
+
+This module loads environment variables and defines the Config class, 
+which sets up configurations for the Flask application, including:
+- Database settings
+- Mail server settings
+- JWT authentication settings
+"""
+
 import os
 from datetime import timedelta
 from dotenv import load_dotenv

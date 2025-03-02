@@ -1,3 +1,7 @@
+"""
+This module provides a decorator to catch and handle various types of 
+exceptions, ensuring that API responses remain consistent and informative.
+"""
 from functools import wraps
 from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
@@ -7,6 +11,10 @@ from app import db
 def handle_exceptions(func):
     """
     Decorator to catch exceptions in route functions and return JSON error responses.
+
+    - Handles HTTP exceptions and returns their appropriate responses.
+    - Catches SQLAlchemy errors, rolls back the session, and returns a database error response.
+    - Catches unexpected exceptions and returns a generic error response.
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -25,4 +33,3 @@ def handle_exceptions(func):
             return jsonify({"error": "Unexpected error", "message": "An internal server error occurred.", "details": str(e)}), 500
 
     return wrapper
-

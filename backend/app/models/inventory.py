@@ -1,3 +1,14 @@
+"""
+Inventory model for managing stock levels.
+
+This module defines the Inventory model, which tracks stock levels for products. 
+It includes:
+- `stock_level`: Current stock count
+- `low_stock_alert`: Threshold for low stock notifications
+- `product_id`: Foreign key linking to the associated product
+- Methods for updating stock levels based on transactions
+"""
+
 from app.models import BaseModel
 from app import db
 from sqlalchemy import Integer, String, ForeignKey

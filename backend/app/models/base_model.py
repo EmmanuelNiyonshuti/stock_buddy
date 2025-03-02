@@ -1,3 +1,15 @@
+"""
+Base model for database entities.
+
+This module defines a reusable base model that provides common attributes 
+and utility methods for all database models. It includes:
+- UUID-based primary key
+- Automatic timestamps (created_at, updated_at)
+- Table name generation
+- JSON serialization
+- Common query methods (get, all)
+"""
+
 from datetime import datetime
 import uuid
 from flask import abort

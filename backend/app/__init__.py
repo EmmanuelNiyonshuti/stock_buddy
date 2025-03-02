@@ -1,6 +1,18 @@
 """
-sets up  Flask app and register blueprints.
+Flask application factory.
+
+This module sets up the Flask application, configures extensions, and registers blueprints. 
+It follows the application factory pattern, allowing flexibility in configuration and testing.
+
+Configured extensions:
+- SQLAlchemy (database ORM)
+- Flask-Login (user session management)
+- Bcrypt (password hashing)
+- Flask-Migrate (database migrations)
+- Flask-CORS (Cross-Origin Resource Sharing)
+- Flask-JWT-Extended (JWT-based authentication)
 """
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow

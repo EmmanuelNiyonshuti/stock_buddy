@@ -1,3 +1,14 @@
+"""
+Transaction model for recording product purchases and sales.
+
+This module defines the Transaction model, which tracks individual sales and purchases of products. 
+It includes:
+- `transaction_type`: Indicates whether the transaction is a "Purchase" or "Sale"
+- `quantity`: The number of units involved in the transaction
+- `total_price`: The total cost of the transaction
+- `product_id`: Foreign key linking the transaction to a specific product
+"""
+
 from app import db
 from app.models import BaseModel
 from sqlalchemy import Integer, String, Float, Numeric, ForeignKey, Enum

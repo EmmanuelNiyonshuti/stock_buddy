@@ -1,6 +1,16 @@
-from werkzeug.exceptions import NotFound, BadRequest, Forbidden, BadGateway, MethodNotAllowed
-from flask import jsonify
+"""
+Error Handlers
 
+This module defines custom error handlers for common HTTP errors in a Flask application.
+"""
+from werkzeug.exceptions import (
+                                NotFound,
+                                BadRequest,
+                                Forbidden,
+                                BadGateway,
+                                MethodNotAllowed
+                                )
+from flask import jsonify
 
 def not_found_error(error):
     """

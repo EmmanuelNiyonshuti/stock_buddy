@@ -1,3 +1,6 @@
+"""This module provides a reusable function to paginate SQLAlchemy query results, 
+ensuring efficient data retrieval and structured API responses.
+"""
 def paginate_query(query, page, per_page):
     """
     General utility function for paginating query results.

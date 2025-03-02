@@ -1,3 +1,7 @@
+"""
+This module provides helper functions to ensure incoming JSON requests 
+are properly formatted and contain the required fields before processing.
+"""
 from flask import request, abort
 
 def require_json():

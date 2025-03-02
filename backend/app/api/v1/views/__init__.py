@@ -1,3 +1,12 @@
+"""
+API Blueprint setup for version 1 of the application.
+
+This module initializes the `app_views` Blueprint, which serves as the central 
+entry point for all API endpoints under `/api/v1`. It imports and registers 
+various route handlers for different resources, including authentication, 
+products, transactions, inventory, and user management.
+"""
+
 from flask import Blueprint
 
 app_views = Blueprint("app_views", __name__, url_prefix="/api/v1")
