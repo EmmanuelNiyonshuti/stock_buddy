@@ -26,7 +26,6 @@ def register_user(user_details):
     db.session.commit()
     return new_user
 
-
 def login_user(login_details):
     require_json()
     require_data(login_details, ["email", "password"])

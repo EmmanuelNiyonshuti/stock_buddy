@@ -1,3 +1,6 @@
+"""
+Inventory services.
+"""
 from app.models.product import Product
 
 def get_inventory(product_id):
