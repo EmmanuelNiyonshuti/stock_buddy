@@ -1,5 +1,14 @@
 """
-User Model
+User model for managing user details and authentication.
+
+This module defines the User model, which represents the users of the system (e.g., business owners, employees, and admins). 
+It includes:
+- `username`: The unique username of the user
+- `email`: The unique email of the user (used for login)
+- `password`: The hashed password for user authentication
+- `role`: The role of the user (Owner, Employee, or Admin)
+- Relationships:
+  - `business`: Links to the `Business` model, where the user is the owner of a business
 """
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
@@ -21,11 +30,9 @@ class User(BaseModel, UserMixin):
     username: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(60), nullable=False)
-    phone_number: Mapped[str] = mapped_column(String(80), nullable=False)
     role: Mapped[Literal["Owner", "Employee", "Admin"]] = mapped_column(String(60), nullable=False)
 
-    inventories = relationship("Inventory", backref="user", cascade="all, delete-orphan")
-    transactions = relationship("Transaction", backref="user", cascade="all, delete-orphan")
+    business = relationship("Business", backref="owner", cascade="all, delete-orphan")
 
     def to_dict(self):
         """Returns a dictionary containing all keys/values of __dict__"""

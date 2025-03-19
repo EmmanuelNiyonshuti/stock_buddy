@@ -48,7 +48,7 @@ class BaseModel(db.Model):
         elif cls.__name__.endswith("s"):
             return cls.__name__.lower()
         return cls.__name__.lower() + "s"
-    
+
     @classmethod
     def get(cls, obj_id):
         """Retrieve a single object by ID."""

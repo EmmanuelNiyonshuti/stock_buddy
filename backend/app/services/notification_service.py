@@ -4,7 +4,7 @@ notification services.
 import os
 from twilio.rest import Client
 from dotenv import load_dotenv
-from app.models import Notification
+from app.models import notification
 from app import db
 
 

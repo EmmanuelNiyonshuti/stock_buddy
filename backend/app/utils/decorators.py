@@ -20,16 +20,15 @@ def handle_exceptions(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-
         except HTTPException as e:
+            db.session.rollback()
             response = jsonify({"error": e.name, "message": e.description})
             return response, e.code
-
         except SQLAlchemyError as e:
             db.session.rollback()
             return jsonify({"error": "Database error", "message": "An internal server error", "details": str(e)}), 500
-
         except Exception as e:
+            db.session.rollback()
             return jsonify({"error": "Unexpected error", "message": "An internal server error occurred.", "details": str(e)}), 500
 
     return wrapper

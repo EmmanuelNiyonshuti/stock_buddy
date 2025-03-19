@@ -6,7 +6,6 @@ from app.utils.create_resp import create_resp
 
 @app_views.route("/users/profile", methods=["GET"], strict_slashes=False)
 @jwt_required()
-@handle_exceptions
 def user_profile_view():
     user_id = get_jwt_identity()
     user_details = user_profile(user_id)
