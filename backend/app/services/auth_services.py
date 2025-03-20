@@ -1,7 +1,4 @@
 from flask import abort
-from flask_jwt_extended import (create_access_token,
-                                create_refresh_token
-                                )
 from email_validator import validate_email, EmailNotValidError
 from app.utils.required_data import require_json, require_data
 from app import db, bcrypt
@@ -25,7 +22,11 @@ def register_user(user_details):
         )
     db.session.add(new_user)
     db.session.commit()
-    return new_user
+    return {
+        "id": new_user.id,
+        "email": new_user.email,
+        "role": new_user.role
+    }
 
 def login_user(login_details):
     require_json()
@@ -33,12 +34,6 @@ def login_user(login_details):
     user = User.query.filter_by(email=login_details["email"]).first()
     if not user or not bcrypt.check_password_hash(user.password, login_details["password"]):
         abort(401, description="Invalid email or password")
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
     return {
-        "access_token": access_token,
-        "refresh_token": refresh_token
-    }
-
-def logout_user():
-    pass
+        "id": user.id
+        }

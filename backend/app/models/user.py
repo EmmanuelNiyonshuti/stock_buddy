@@ -17,14 +17,14 @@ from sqlalchemy.orm import validates, Mapped, mapped_column, relationship
 from typing import Literal
 from app.models import BaseModel
 
-@login_manager.user_loader
-def load_user(user_id):
-    """
-    Loads a user by user ID.
-    :param user_id: The ID of the user to load.
-    :return: The user object or None if not found.
-    """
-    return User.query.get(user_id)
+# @login_manager.user_loader
+# def load_user(user_id):
+#     """
+#     Loads a user by user ID.
+#     :param user_id: The ID of the user to load.
+#     :return: The user object or None if not found.
+#     """
+#     return User.query.get(user_id)
 
 class User(BaseModel, UserMixin):
     username: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)

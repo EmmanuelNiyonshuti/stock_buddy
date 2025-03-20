@@ -1,6 +1,5 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.api.v1.views import app_views
-from app.utils.decorators import handle_exceptions
 from app.services.user_services import user_profile
 from app.utils.create_resp import create_resp
 

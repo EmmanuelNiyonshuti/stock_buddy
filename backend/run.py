@@ -14,9 +14,12 @@ from flask_jwt_extended import(get_jwt,
                             set_access_cookies)
 from app import create_app, db 
 from app.error_handlers import register_error_handlers
+from app.models.user import User
+from app.models.business import Business
+from app.models.inventory import Inventory
 from app.models.product import Product
 from app.models.transaction import Transaction
-from app.models.inventory import Inventory
+from app.models.notification import Notification
 
 app = create_app()
 
@@ -37,5 +40,4 @@ def refresh_exp_jwts(resp):
 
 if __name__== "__main__":
     with app.app_context():
-        db.create_all()
         app.run()

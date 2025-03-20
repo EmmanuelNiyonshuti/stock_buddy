@@ -3,7 +3,7 @@ This module provides a decorator to catch and handle various types of
 exceptions, ensuring that API responses remain consistent and informative.
 """
 from functools import wraps
-from flask import jsonify
+from flask import jsonify, abort
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
 from app import db
@@ -22,13 +22,12 @@ def handle_exceptions(func):
             return func(*args, **kwargs)
         except HTTPException as e:
             db.session.rollback()
-            response = jsonify({"error": e.name, "message": e.description})
-            return response, e.code
+            raise e
         except SQLAlchemyError as e:
             db.session.rollback()
             return jsonify({"error": "Database error", "message": "An internal server error", "details": str(e)}), 500
         except Exception as e:
             db.session.rollback()
-            return jsonify({"error": "Unexpected error", "message": "An internal server error occurred.", "details": str(e)}), 500
+            raise e
 
     return wrapper
