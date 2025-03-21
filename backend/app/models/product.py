@@ -18,7 +18,6 @@ from decimal import Decimal
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Product(BaseModel):
-  """ """
   name: Mapped[str] = mapped_column(String(255), nullable=False)
   description: Mapped[str] = mapped_column(Text, nullable=True)
   price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
@@ -26,13 +25,12 @@ class Product(BaseModel):
 
   transactions = relationship(
                       "Transaction",
-                      backref="product",
+                      back_populates="product",
                       cascade="all, delete-orphan",
-                      lazy="dynamic"
                       )
   inventory = relationship(
                           "Inventory",
-                          backref="product",
+                          back_populates="product",
                           uselist=False,
                           cascade="all, delete-orphan"
                           )

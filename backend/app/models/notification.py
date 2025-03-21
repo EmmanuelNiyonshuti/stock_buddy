@@ -16,10 +16,9 @@ It includes:
 from typing import Literal
 from app.models import BaseModel
 from sqlalchemy import String, Text, Enum, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Notification(BaseModel):
-    """ """
     recipient: Mapped[str] = mapped_column(String(255), nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     channel: Mapped[Literal["SMS", "Email", "In-App"]] = mapped_column(Enum("SMS", "Email", "In-App"), nullable=False)
@@ -27,3 +26,12 @@ class Notification(BaseModel):
 
     business_id: Mapped[str] = mapped_column(String(60), ForeignKey("business.id"), nullable=False)
     inventory_id: Mapped[str] = mapped_column(String(60), ForeignKey("inventories.id"), nullable=False)
+
+    business = relationship(
+      "Business",
+      back_populates="notifications"
+    )
+    inventory = relationship(
+      "Inventory",
+      back_populates="notification"
+    )
