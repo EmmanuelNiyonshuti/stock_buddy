@@ -10,7 +10,7 @@ from app.models.user import user_business_association
 
 class Business(BaseModel):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    phone_number: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String(80), nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
 

@@ -6,7 +6,7 @@ from app.models.user import User
 
 def register_user(user_details):
     require_json()
-    require_data(user_details, ["username", "email", "password", "role"])
+    require_data(user_details, ["username", "email", "password"])
     try:
         validate_email(user_details["email"])
     except EmailNotValidError:
@@ -17,15 +17,14 @@ def register_user(user_details):
     new_user = User(
         username=user_details["username"],
         email=user_details["email"],
-        password=pwd_hash,
-        role=user_details["role"]
+        password=pwd_hash
         )
     db.session.add(new_user)
     db.session.commit()
     return {
         "id": new_user.id,
-        "email": new_user.email,
-        "role": new_user.role
+        "username": new_user.username,
+        "email": new_user.email
     }
 
 def login_user(login_details):

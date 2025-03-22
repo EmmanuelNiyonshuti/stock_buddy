@@ -1,42 +1,60 @@
 from flask import abort
-from flask_jwt_extended import get_jwt_identity
 from app import db
-from app.models.business import Business
 from app.utils.required_data import require_json, require_data
-from app.models.user import User
+from app.models.business import Business
+from app.models.user import User, user_business_association
+from app.utils.pagination import paginate_query
 
-def create_business(business_details):
+def create_business(user_id, business_details):
+    user = User.get(user_id)
     require_json()
     require_data(business_details, ["name", "phone_number"], ["email", "description"])
-    user_id = get_jwt_identity()
-    user = User.get(user_id)
-    if not user or user.role != "Owner":
-        abort(403, "you must be the owner to create a business")
-    new_business = Business(
-                            **business_details,
-                            owner_id=user_id)
+    new_business = Business(**business_details)
     db.session.add(new_business)
+    db.session.flush()
+    association_entry = user_business_association.insert().values(
+        user_id=user_id,
+        business_id=new_business.id,
+        role="Owner"
+    )
+    db.session.execute(association_entry)
     db.session.commit()
-
     return new_business
 
-def update_business_details(business_id, business_details):
+def get_all_businesses(user_id, page, per_page):
+    associations = db.session.query(user_business_association).filter_by(user_id=user_id).all()
+    business_ids = [assoc.business_id for assoc in associations]
+    businesses_query = Business.query.filter(Business.id.in_(business_ids))
+    paginated_bsns = paginate_query(businesses_query, page, per_page)
+    if not paginated_bsns["items"]:
+        abort(404, description="no business associated with the user.")
+    return paginated_bsns
+
+
+def update_business_details(user_id, business_id, business_details):
+    business = Business.get(business_id)
     require_json()
-    require_data(business_details, ["name", "phone_number"], ["email", "description"])
-    user_id = get_jwt_identity()
-    business = Business.query.filter_by(id=business_id, owner_id=user_id).first()
-    if not business:
-        abort(404, "Business not found")
+    valid_fields = {"name", "phone_number", "email", "description"}
+    if any(field not in valid_fields for field in business_details):
+        abort(400, f"Invalid field(s). Allowed fields: {valid_fields}")
+    associations = db.session.query(user_business_association).filter_by(
+    user_id=user_id, business_id=business_id, role="Owner"
+    ).first()
+    if not associations:
+        abort(403, description="Forbidden: You are not the owner of this business")
     for k, v in business_details.items():
         setattr(business, k, v)
     db.session.commit()
     return business
 
-def delete_business(business_id):
-    user_id = get_jwt_identity()
-    business = Business.query.filter_by(id=business_id, owner_id=user_id).first()
-    if not business:
-        abort(404, "Business not found")
+def delete_business(user_id, business_id):
+    business = Business.get(business_id)
+    associations = db.session.query(user_business_association).filter_by(
+        user_id=user_id, business_id=business_id, role="Owner"
+        ).first()
+    if not associations:
+        abort(403, description="Forbidden: you are not the owner of this business.")
+    db.session.query(user_business_association).filter_by(business_id=business_id).delete()
     db.session.delete(business)
     db.session.commit()
-    return {}
+    return

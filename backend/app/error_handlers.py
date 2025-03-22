@@ -11,6 +11,7 @@ from werkzeug.exceptions import (
                                 BadGateway,
                                 MethodNotAllowed,
                                 Unauthorized,
+                                UnsupportedMediaType,
                                 InternalServerError
                                 )
 from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
@@ -71,6 +72,11 @@ def unauthorized_error(error):
         "message": error.description if error.description else "Authentication is required to access this resource."
     }), 401
 
+def unsupported_media_type(error):
+    return jsonify({
+        "error": "Unsupported Media Type",
+        "message": error.description if error.description else "Unsupported media type"
+    }), 415
 def jwt_auth_error(error):
     """Handles JWT-related authentication errors"""
     return jsonify({
@@ -87,6 +93,7 @@ def register_error_handlers(app):
     app.register_error_handler(Conflict, conflict_error)
     app.register_error_handler(MethodNotAllowed, method_not_allowed)
     app.register_error_handler(Unauthorized, unauthorized_error)
+    app.register_error_handler(UnsupportedMediaType, unsupported_media_type)
 
     app.register_error_handler(NoAuthorizationError, jwt_auth_error)
     app.register_error_handler(InvalidHeaderError, jwt_auth_error)

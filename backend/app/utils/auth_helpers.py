@@ -8,14 +8,14 @@ from flask_jwt_extended import (create_access_token,
                                 )
 
 
-def create_auth_response(user_data, message="Success", status=200):
+def create_auth_response(user_data, message={"Success": True}, status=200):
     """
     Generates a JSON response with JWT access and refresh tokens stored in HttpOnly cookies.
     """
     access_token = create_access_token(identity=user_data["id"])
     refresh_token = create_refresh_token(identity=user_data["id"])
     
-    response = jsonify({"message": message})
+    response = jsonify(message)
     set_access_cookies(response, access_token)
     set_refresh_cookies(response, refresh_token)
 

@@ -36,5 +36,5 @@ class Config:
     JWT_TOKEN_LOCATION=["cookies"]
     JWT_COOKIE_HTTPONLY=True
     JWT_COOKIE_SAMESITE="Lax"
-    JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=30)
-    JWT_COOKIE_CSRF_PROTECT=True
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
+    JWT_COOKIE_CSRF_PROTECT=False if os.getenv("ENV") == "Development" else True

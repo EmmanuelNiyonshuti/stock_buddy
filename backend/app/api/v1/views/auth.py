@@ -12,13 +12,13 @@ from app.utils.auth_helpers import create_auth_response, create_logout_response
 def user_registration_view():
     user_details = request.get_json()
     user_data = register_user(user_details)
-    return create_auth_response(user_data, "user registered successfully", 201)
+    return create_auth_response(user_data, user_data, 201)
 
 @app_views.route("/auth/login", methods=["POST"], strict_slashes=False)
 def user_login_view():
     user_details = request.get_json()
     user_data = login_user(user_details)
-    return create_auth_response(user_data, "Logged in successfully")
+    return create_auth_response(user_data)
 
 @app_views.route("/auth/logout", methods=["POST"], strict_slashes=False)
 def user_logout_view():

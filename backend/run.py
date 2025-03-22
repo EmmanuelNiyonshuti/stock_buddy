@@ -13,7 +13,6 @@ from app.models.transaction import Transaction
 from app.models.notification import Notification
 
 app = create_app()
-
 register_error_handlers(app)
 
 if __name__== "__main__":
