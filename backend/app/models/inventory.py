@@ -7,7 +7,6 @@ from app.models import BaseModel
 from app import db
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.services.notification_service import send_sms
 
 class Inventory(BaseModel):
     stock_level: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -39,5 +38,6 @@ class Inventory(BaseModel):
         elif transaction_type == "Sale":
             self.stock_level -= quantity
         if self.stock_level < self.low_stock_alert:
+            from app.tasks import send_sms_task
             send_sms_task.delay(self.business.phone_number, "⚠️ Low Stock Alert! Restock early.")
         db.session.commit()
