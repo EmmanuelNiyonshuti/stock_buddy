@@ -12,12 +12,11 @@ def create_business(user_id, business_details):
     new_business = Business(**business_details)
     db.session.add(new_business)
     db.session.flush()
-    association_entry = user_business_association.insert().values(
+    db.session.execute(user_business_association.insert().values(
         user_id=user_id,
         business_id=new_business.id,
         role="Owner"
-    )
-    db.session.execute(association_entry)
+    ))
     db.session.commit()
     return new_business
 
