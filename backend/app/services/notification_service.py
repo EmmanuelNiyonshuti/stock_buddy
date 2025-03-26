@@ -16,7 +16,7 @@ twilio_phone_number = os.environ["TWILIO_PHONE_NBR"]
 
 client = Client(account_sid, auth_token)
 
-def send_sms(to, msg_body):
+def send_sms(db_session, to, msg_body):
     """Send an SMS notification via Twilio"""
     notification = Notification(
                                 recipient=to,
@@ -24,8 +24,8 @@ def send_sms(to, msg_body):
                                 channel="SMS",
                                 status="Pending"
                                 )
-    db.session.add(notification)
-    db.session.commit()
+    db_session.add(notification)
+    db_session.commit()
     try:
         message = client.messages.create(
             body=msg_body,
@@ -33,10 +33,10 @@ def send_sms(to, msg_body):
             to=to,
             )
         notification.status = "Sent"
-        db.session.commit()
+        db_session.commit()
         return {"success": True, "message": "SMS sent successfully"}
     except Excepion as e:
         notification.status = "Failed"
         return {"success": False, "error": str(e)}
     finally:
-        db.session.commit()
+        db_session.commit()

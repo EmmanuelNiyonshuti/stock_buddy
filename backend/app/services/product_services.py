@@ -1,22 +1,17 @@
-from flask import request
-from app import db
+from flask_jwt_extended import get_jwt_identity
+from werkzeug.exceptions import Forbidden
 from app.models.product import Product
 from app.models.user import user_business_association
 from app.models.inventory import Inventory
-from app.utils.required_data import require_json, require_data
 from app.utils.pagination import paginate_query
-from flask_jwt_extended import get_jwt_identity
 
-def add_product(product_details):
-    user_id = get_jwt_identity()
+def add_product(db_session, user_id, product_details):
     associated_bsns = db.session.query(user_business_association).filter_by(user_id=user_id).all()
     if not associated_bsns:
-        abort(403, "no associated business. please you must be the owner of the business or associated with one to add products")
-    require_json()
-    require_data(product_details, ["name", "price", "sku"], ["description"])
+        raise Unauthorized("no associated business. please you must be the owner of the business or associated with one to add products")
     new_product = Product(**product_details)
-    db.session.add(new_product)
-    db.session.commit()
+    db_session.add(new_product)
+    db_session.commit()
     return new_product
 
 def get_all_products():
@@ -25,11 +20,9 @@ def get_all_products():
     query = Product.query
     return paginate_query(query, page, per_page)
 
-
-def update_product(product_id, data):
-    require_json()
+def update_product(db_session, product_id, data):
     product = Product.get(product_id)
     for k, v in data.items():
         setattr(product, k, v)
-    db.session.commit()
+    db_session.commit()
     return product

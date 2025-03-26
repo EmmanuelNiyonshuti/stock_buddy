@@ -10,9 +10,14 @@ from app.utils.create_resp import create_resp
 @app_views.route("/products/<string:product_id>/transactions", methods=["POST"], strict_slashes=False)
 @jwt_required()
 def create_transaction_view(product_id):
+    require_json()
+    require_data(transaction_details, ["transaction_type", "quantity", "total_price"])
     transaction_details = request.get_json()
-    new_transaction = create_transaction(product_id, transaction_details)
-    return create_resp(new_transaction.to_dict(), 201)
+    try:
+        new_transaction = create_transaction(db.session, product_id, transaction_details)
+        return create_resp(new_transaction.to_dict(), 201)
+    except BadRequest as e:
+        abort(400, description=str(e))
 
 @app_views.route("/products/<string:product_id>/transactions", methods=["GET"], strict_slashes=False)
 @jwt_required()
@@ -25,5 +30,8 @@ def get_product_transactions_view(product_id):
 @app_views.route("/products/<string:product_id>/transactions/<string:transaction_id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_product_transaction_view(product_id, transaction_id):
-    transaction = get_product_transaction(product_id, transaction_id)
-    return create_resp(transaction.to_dict())
+    try:
+        transaction = get_product_transaction(product_id, transaction_id)
+        return create_resp(transaction.to_dict())
+    except NotFound as e:
+        abort(404, description=str(e))
