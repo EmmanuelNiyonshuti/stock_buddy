@@ -2,6 +2,7 @@
 Authentication routes.
 """
 from flask import request, abort
+from werkzeug.exceptions import Unauthorized
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from email_validator import validate_email, EmailNotValidError
 from app import db
@@ -32,12 +33,13 @@ def user_login_view():
     login_details = request.get_json()
     require_data(login_details, ["email", "password"])
     try:
-        user_data = login_user(user_details)
+        user_data = login_user(login_details)
         return create_auth_response(user_data)
     except Unauthorized as e:
         abort(401, description=str(e))
 
 @app_views.route("/auth/logout", methods=["POST"], strict_slashes=False)
+@jwt_required()
 def user_logout_view():
     return create_logout_response()
 

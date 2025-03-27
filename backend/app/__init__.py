@@ -12,7 +12,6 @@ Configured extensions:
 - Flask-CORS (Cross-Origin Resource Sharing)
 - Flask-JWT-Extended (JWT-based authentication)
 """
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -20,21 +19,34 @@ from .config import Config
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flasgger import Swagger
+import os
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 migrate = Migrate()
 cors = CORS()
 jwt = JWTManager()
+swagger = Swagger()
 
-def create_app(config=Config):
+def create_app(config_class=Config, testing=False):
     app = Flask(__name__)
-    app.config.from_object(Config)
+
+    if testing:
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+        app.config["TESTING"] = True
+        app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+        app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+        app.config["JWT_ACCESS_COOKIE_NAME"] = "access_cookie"
+        app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+    else:
+        app.config.from_object(config_class)
 
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    swagger.init_app(app)
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     from .api.v1.views import app_views

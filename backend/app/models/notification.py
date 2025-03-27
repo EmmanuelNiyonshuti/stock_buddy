@@ -19,13 +19,12 @@ from sqlalchemy import String, Text, Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Notification(BaseModel):
-    recipient: Mapped[str] = mapped_column(String(255), nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     channel: Mapped[Literal["SMS", "Email", "In-App"]] = mapped_column(Enum("SMS", "Email", "In-App"), nullable=False)
     status: Mapped[Literal["Pending", "Sent", "Failed"]] = mapped_column(Enum("Pending", "Sent", "Failed"), default="Pending")
 
     business_id: Mapped[str] = mapped_column(String(60), ForeignKey("business.id"), nullable=False)
-    inventory_id: Mapped[str] = mapped_column(String(60), ForeignKey("inventories.id"), nullable=False)
+    inventory_id: Mapped[str] = mapped_column(String(60), ForeignKey("inventories.id"), nullable=True)
 
     business = relationship(
       "Business",

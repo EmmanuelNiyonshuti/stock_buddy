@@ -1,5 +1,6 @@
 from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.exceptions import NotFound
 from app import db
 from app.api.v1.views import app_views
 from app.utils.required_data import require_json, require_data
@@ -16,10 +17,9 @@ from app.utils.create_resp import create_resp
 @jwt_required()
 def add_business_view():
     require_json()
+    business_details = request.get_json()
     require_data(business_details, ["name", "phone_number"], ["email", "description"])
     user_id = get_jwt_identity()
-    user = User.get(user_id)
-    business_details = request.get_json()
     new_business = create_business(db.session, user_id, business_details)
     return create_resp(new_business.to_dict(), 201)
 

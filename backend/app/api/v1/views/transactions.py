@@ -1,5 +1,5 @@
 from flask import request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.api.v1.views import app_views
 from app.services.transaction_services import (create_transaction,
                                                get_product_transactions,
@@ -11,10 +11,11 @@ from app.utils.create_resp import create_resp
 @jwt_required()
 def create_transaction_view(product_id):
     require_json()
-    require_data(transaction_details, ["transaction_type", "quantity", "total_price"])
     transaction_details = request.get_json()
+    require_data(transaction_details, ["transaction_type", "quantity", "total_price"])
+    user_id = get_jwt_identity()
     try:
-        new_transaction = create_transaction(db.session, product_id, transaction_details)
+        new_transaction = create_transaction(db.session, user_id, product_id, transaction_details)
         return create_resp(new_transaction.to_dict(), 201)
     except BadRequest as e:
         abort(400, description=str(e))
@@ -22,9 +23,10 @@ def create_transaction_view(product_id):
 @app_views.route("/products/<string:product_id>/transactions", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_product_transactions_view(product_id):
+    user_id = get_jwt_identity()
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
-    transactions = get_product_transactions(page, per_page, product_id)
+    transactions = get_product_transactions(db.session, user_id, page, per_page, product_id)
     return create_resp(transactions)
 
 @app_views.route("/products/<string:product_id>/transactions/<string:transaction_id>", methods=["GET"], strict_slashes=False)

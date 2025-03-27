@@ -24,7 +24,13 @@ def add_product_view():
 @app_views.route("/products", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_all_products_view():
-    products = get_all_products()
+    user_id = get_jwt_identity()
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+    business_id = request.args.get("business_id", type=str)
+    if not business_id:
+        abort(400, description="business_id is required")
+    products = get_all_products(db.session, user_id, business_id, page, per_page)
     return create_resp(products)
 
 @app_views.route("/products/<string:product_id>", methods=["GET"], strict_slashes=False)
@@ -38,7 +44,11 @@ def get_product_view(product_id):
 def update_product_view(product_id):
     require_json()
     data = request.get_json()
-    updated_product = update_product(db.session, product_id, data)
+    business_id = request.args.get("business_id", type=str)
+    if not business_id:
+        abort(400, description="business_id is required")
+    user_id = get_jwt_identity()
+    updated_product = update_product(db.session, user_id, business_id, product_id, data)
     return create_resp(updated_product.to_dict())
 
 @app_views.route("/products/<string:product_id>", methods=["DELETE"], strict_slashes=False)

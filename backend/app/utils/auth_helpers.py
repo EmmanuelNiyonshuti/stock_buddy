@@ -14,7 +14,7 @@ def create_auth_response(user_data, message={"Success": True}, status=200):
     """
     access_token = create_access_token(identity=user_data["id"])
     refresh_token = create_refresh_token(identity=user_data["id"])
-    
+
     response = jsonify(message)
     set_access_cookies(response, access_token)
     set_refresh_cookies(response, refresh_token)

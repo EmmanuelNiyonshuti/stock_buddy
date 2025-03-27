@@ -9,6 +9,15 @@ from app.api.v1.views import app_views
 def stat():
     """
     returns the status of the api.
+
+    ---
+    responses:
+        200:
+            description: A successful response.
+            examples:
+            {
+                "status": "OK"
+            }
     """
     return jsonify({
         "status": "OK"

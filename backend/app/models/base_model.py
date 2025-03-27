@@ -10,9 +10,9 @@ and utility methods for all database models. It includes:
 - Common query methods (get, all)
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
-from flask import abort
+from werkzeug.exceptions import NotFound
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
@@ -23,15 +23,15 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     id: Mapped[str] = mapped_column(String(60), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
+    updated_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     def __init__(self, **kwargs):
         """Allows setting attributes dynamically while keeping default values."""
         super().__init__(**kwargs)
         self.id = kwargs.get("id", str(uuid.uuid4()))
-        self.created_at = kwargs.get("created_at", datetime.utcnow())
-        self.updated_at = kwargs.get("updated_at", datetime.utcnow())
+        self.created_at = kwargs.get("created_at", datetime.now(timezone.utc))
+        self.updated_at = kwargs.get("updated_at", datetime.now(timezone.utc))
 
     def to_dict(self):
         """Returns a JSON-serializable dictionary of the model."""
@@ -54,7 +54,7 @@ class BaseModel(db.Model):
         """Retrieve a single object by ID."""
         obj = db.session.get(cls, obj_id)
         if obj is None:
-            abort(404, description=f"{cls.__name__} with id {obj_id} not found.")
+            raise NotFound(description=f"{cls.__name__} with id {obj_id} not found.")
         return obj
 
     @classmethod

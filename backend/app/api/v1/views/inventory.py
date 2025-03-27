@@ -1,6 +1,8 @@
-from flask import request
+from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.exceptions import Forbidden
 from app.api.v1.views import app_views
+from app.models.product import Product
 from app import db
 from app.utils.required_data import require_json, require_data
 from app.utils.decorators import handle_exceptions
@@ -14,11 +16,10 @@ from app.utils.create_resp import create_resp
 @jwt_required()
 def add_business_inventory_view(business_id):
     require_json()
+    inventory_details = request.get_json()
     require_data(inventory_details, [ "product_id", "stock_level", "low_stock_alert"])
     user_id = get_jwt_identity()
-    business = Business.get(business_id)
     product = Product.get(inventory_details["product_id"])
-    inventory_details = request.get_json()
     try:
         new_inventory = add_inventory(db.session, user_id, business_id, inventory_details)
         return create_resp(new_inventory.to_dict(), 201)

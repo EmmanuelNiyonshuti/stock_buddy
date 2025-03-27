@@ -32,7 +32,7 @@ class Inventory(BaseModel):
     def __repr__(self):
         return f"<Inventory Product id = {self.product_id}, stock level = {self.stock_level}>"
 
-    def update_stock_level(self, quantity: int, transaction_type: str) -> None:
+    def update_stock_level(self, db_session, quantity: int, transaction_type: str) -> None:
         if transaction_type == "Purchase":
             self.stock_level += quantity
         elif transaction_type == "Sale":
@@ -40,4 +40,4 @@ class Inventory(BaseModel):
         if self.stock_level < self.low_stock_alert:
             from app.tasks import send_sms_task
             send_sms_task.delay(self.business.phone_number, "⚠️ Low Stock Alert! Restock early.")
-        db.session.commit()
+        db_session.commit()
