@@ -1,0 +1,25 @@
+swagger: "2.0"
+info:
+  title: "Stock Buddy API"
+  description: "API documentation for Small Business Stock Tracker"
+  version: "1.0.0"
+
+schemes:
+  - "http"
+  - "https"
+
+paths: {}
+
+tags:
+  - name: API Status
+    description: "Health check endpoint"
+  - name: Authentication
+    description: "Endpoints related to user authentication"
+  - name: Businesses
+    description: "Endpoints for managing businesses"
+  - name: Products
+    description: "Endpoints for managing products"
+  - name: Inventory
+    description: "Endpoints for managing inventory"
+  - name: Transactions
+    description: "Endpoints for product transactions"

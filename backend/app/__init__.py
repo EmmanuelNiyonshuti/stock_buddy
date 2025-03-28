@@ -27,11 +27,9 @@ bcrypt = Bcrypt()
 migrate = Migrate()
 cors = CORS()
 jwt = JWTManager()
-swagger = Swagger()
 
 def create_app(config_class=Config, testing=False):
     app = Flask(__name__)
-
     if testing:
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
         app.config["TESTING"] = True
@@ -46,7 +44,7 @@ def create_app(config_class=Config, testing=False):
     bcrypt.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-    swagger.init_app(app)
+    swagger = Swagger(app, template_file=os.path.join(os.path.dirname(__file__), 'api/docs/swagger.yaml'))
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     from .api.v1.views import app_views

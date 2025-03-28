@@ -1,10 +1,10 @@
-# stock_buddy
+# stock_buddy - Small Business Stock Tracker
 
 ## Overview
-This is the backend of stock_buddy, a RESTful API for managing inventory, tracking stock levels, and recording transactions. Built with Flask, it provides secure and efficient handling of product and inventory data.
+This is the backend of **stock_buddy**, a simple yet scalable RESTful API designed for small businesses to efficiently manage their inventory, track stock levels, and record transactions. Built with **Flask**, this API provides secure handling of product data, stock tracking, and transaction management, offering a smart alternative to traditional pen/paper or Excel-based inventory systems.
 
 ## Features
-- **User Authentication** – Secure login and registration with JWT authentication.
+- **User Authentication** – Secure login and registration with Cookie-based JWT authentication.
 - **Product Management** – CRUD operations for products.
 - **Inventory Tracking** – Updates stock levels based on transactions.
 - **Transaction Logging** – Records all product purchases and sales.
