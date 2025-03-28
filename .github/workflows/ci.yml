@@ -14,18 +14,26 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
-      - name: Run tests
-        run: |
-          pytest backend/app/tests --maxfail=1 --disable-warnings -q
+      - name: Set environment variables
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_PHONE_NBR: ${{ secrets.TWILIO_PHONE_NBR }}
+        run: echo "Environment variables set"
+
+      - name: Run tests with in-memory SQLite
+        run: pytest backend/app/tests
