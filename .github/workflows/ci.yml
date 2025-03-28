@@ -36,4 +36,4 @@ jobs:
         run: echo "Environment variables set"
 
       - name: Run tests with in-memory SQLite
-        run: pytest ../../backend/app/tests
+        run: pytest backend/app/tests
