@@ -34,6 +34,11 @@ jobs:
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_PHONE_NBR: ${{ secrets.TWILIO_PHONE_NBR }}
         run: echo "Environment variables set"
+      - name: Debug Environment Variables
+        run: |
+          echo "JWT_SECRET_KEY is '${{ secrets.JWT_SECRET_KEY }}'"
+          echo "SECRET_KEY is '${{ secrets.SECRET_KEY }}'"
+          echo "SQLALCHEMY_DATABASE_URI is '${{ secrets.SQLALCHEMY_DATABASE_URI }}'"
 
       - name: Run tests with in-memory SQLite
         run: pytest backend/app/tests

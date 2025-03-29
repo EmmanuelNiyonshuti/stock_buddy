@@ -36,8 +36,8 @@ def create_app(config_class=Config, testing=False):
     if testing:
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
         app.config["TESTING"] = True
-        app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-        app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+        app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_test_secret")
+        app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "default_jwt_secret")
         app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
         app.config["JWT_ACCESS_COOKIE_NAME"] = "access_cookie"
         app.config["JWT_COOKIE_CSRF_PROTECT"] = False
