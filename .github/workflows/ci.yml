@@ -27,9 +27,9 @@ jobs:
 
       - name: Set environment variables
         env:
+          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_PHONE_NBR: ${{ secrets.TWILIO_PHONE_NBR }}
