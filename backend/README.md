@@ -64,7 +64,8 @@ Make sure you have the following installed:
    ```
 
 The API will now be running at `http://127.0.0.1:5000/`.
-API Documentation
+
+## API Documentation
 
 For a full list of available endpoints, visit the Swagger API Docs at:
 `http://127.0.0.1:5000/apidocs`
