@@ -4,16 +4,18 @@
 This is the backend of **stock_buddy**, a simple yet scalable RESTful API designed for small businesses to efficiently manage their inventory, track stock levels, and record transactions. Built with **Flask**, this API provides secure handling of product data, stock tracking, and transaction management, offering a smart alternative to traditional pen/paper or Excel-based inventory systems.
 
 ## Features
-- **User Authentication** – Secure login and registration with Cookie-based JWT authentication.
+- **User Authentication** – login and registration with Cookie-based JWT authentication.
 - **Product Management** – CRUD operations for products.
 - **Inventory Tracking** – Updates stock levels based on transactions.
 - **Transaction Logging** – Records all product purchases and sales.
 - **Low-Stock Alerts** – Notifies users when stock reaches a critical level.
+- **Swagger API Documentation** - Interactive API docs available at /apidocs.
 
 ## Tech Stack
 - **Framework**: Flask
 - **Database**: MySQL with SQLAlchemy ORM
 - **Authentication**: JWT for secure user access
+- **API Documentation**: Swagger (via Flasgger)
 
 ## Setup Guide
 
@@ -61,27 +63,9 @@ Make sure you have the following installed:
    python3 run.py
    ```
 
-The API should now be running on `http://127.0.0.1:5000/`.
+The API will now be running at `http://127.0.0.1:5000/`.
+API Documentation
 
-## API Endpoints
-
-### Authentication
-- `POST /api/v1/users` – Register a new user
-- `POST /api/v1/users/auth` – Authenticate user and return JWT
-
-### Products
-- `GET /api/v1/products` – Retrieve all products (with pagination support)
-- `POST /api/v1/products` – Create a new product
-- `GET /api/v1/products/<id>` – Retrieve a specific product
-- `PUT /api/v1/products/<id>` – Update product details
-- `DELETE /api/v1/products/<id>` – Remove a product
-
-### Transactions
-- `GET /api/v1/transactions` – Retrieve all transactions
-- `POST /api/v1/transactions` – Log a new transaction
-- `GET /api/v1/transactions/<id>` – Retrieve a specific transaction
-
-### Inventory
-
-- `GET /products/<product_id>/inventory` – Get inventory status for a product.
+For a full list of available endpoints, visit the Swagger API Docs at:
+`http://127.0.0.1:5000/apidocs`
 
