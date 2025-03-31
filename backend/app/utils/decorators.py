@@ -10,7 +10,7 @@ from app import db
 
 def handle_exceptions(func):
     """
-    Decorator to catch exceptions in route functions and return JSON error responses.
+    Decorator to catch exceptions in route functions.
 
     - Handles HTTP exceptions and returns their appropriate responses.
     - Catches SQLAlchemy errors, rolls back the session, and returns a database error response.
@@ -29,5 +29,4 @@ def handle_exceptions(func):
         except Exception as e:
             db.session.rollback()
             raise e
-
     return wrapper

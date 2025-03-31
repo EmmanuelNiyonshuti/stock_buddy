@@ -6,7 +6,6 @@ It follows the application factory pattern, allowing flexibility in configuratio
 
 Configured extensions:
 - SQLAlchemy (database ORM)
-- Flask-Login (user session management)
 - Bcrypt (password hashing)
 - Flask-Migrate (database migrations)
 - Flask-CORS (Cross-Origin Resource Sharing)
@@ -21,6 +20,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 import os
+from .celery_init import celery_init_app
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -41,6 +41,10 @@ def create_app(config_class=Config, testing=False):
         app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
         app.config["JWT_ACCESS_COOKIE_NAME"] = "access_cookie"
         app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+        app.config["CELERY"] = {
+            "broker_url":os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0"),
+            "result_backend":os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+            }
     else:
         app.config.from_object(config_class)
 
@@ -50,8 +54,9 @@ def create_app(config_class=Config, testing=False):
     jwt.init_app(app)
     swagger = Swagger(app, template_file=os.path.join(os.path.dirname(__file__), 'api/docs/swagger.yaml'))
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    celery_init_app(app)
 
-    from .api.v1.views import app_views
-    app.register_blueprint(app_views)
+    from .api.v1.views import app_views_bp
+    app.register_blueprint(app_views_bp)
 
     return app

@@ -1,11 +1,7 @@
 """
 Application Configuration
 
-This module loads environment variables and defines the Config class, 
-which sets up configurations for the Flask application, including:
-- Database settings
-- Mail server settings
-- JWT authentication settings
+This module loads environment variables and defines the Config class.
 """
 
 import os
@@ -38,3 +34,8 @@ class Config:
     JWT_COOKIE_SAMESITE="Lax"
     JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
     JWT_COOKIE_CSRF_PROTECT=False if os.getenv("ENV") == "Development" else True
+
+    CELERY={
+        "broker_url":os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0"),
+        "result_backend":os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+    }

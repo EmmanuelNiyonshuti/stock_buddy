@@ -1,6 +1,6 @@
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.api.v1.views import app_views
+from app.api.v1.views import app_views_bp
 from app.services.transaction_services import (create_transaction,
                                                get_product_transactions,
                                                get_product_transaction
@@ -8,7 +8,7 @@ from app.services.transaction_services import (create_transaction,
 from app.utils.create_resp import create_resp
 from flasgger import swag_from
 
-@app_views.route("/products/<string:product_id>/transactions", methods=["POST"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>/transactions", methods=["POST"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Transactions"],
@@ -79,7 +79,7 @@ def create_transaction_view(product_id):
     except BadRequest as e:
         abort(400, description=str(e))
 
-@app_views.route("/products/<string:product_id>/transactions", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>/transactions", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Transactions"],
@@ -145,7 +145,7 @@ def get_product_transactions_view(product_id):
     transactions = get_product_transactions(db.session, user_id, page, per_page, product_id)
     return create_resp(transactions)
 
-@app_views.route("/products/<string:product_id>/transactions/<string:transaction_id>", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>/transactions/<string:transaction_id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Transactions"],

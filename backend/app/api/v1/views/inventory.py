@@ -1,7 +1,7 @@
 from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.exceptions import Forbidden
-from app.api.v1.views import app_views
+from app.api.v1.views import app_views_bp
 from app.models.product import Product
 from app import db
 from app.utils.required_data import require_json, require_data
@@ -13,7 +13,7 @@ from app.services.inventory_services import (
 from app.utils.create_resp import create_resp
 from flasgger import swag_from
 
-@app_views.route("/businesses/<string:business_id>/inventories", methods=["POST"], strict_slashes=False)
+@app_views_bp.route("/businesses/<string:business_id>/inventories", methods=["POST"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Inventory"],
@@ -71,7 +71,7 @@ def add_business_inventory_view(business_id):
     except Forbidden as e:
         abort(403, description=str(e))
 
-@app_views.route("/businesses/<string:business_id>/inventories", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/businesses/<string:business_id>/inventories", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Inventory"],

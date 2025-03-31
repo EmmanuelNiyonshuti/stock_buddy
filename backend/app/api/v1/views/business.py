@@ -2,7 +2,7 @@ from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.exceptions import NotFound
 from app import db
-from app.api.v1.views import app_views
+from app.api.v1.views import app_views_bp
 from app.utils.required_data import require_json, require_data
 from app.models.business import Business
 from app.services.business_services import (
@@ -14,7 +14,7 @@ from app.services.business_services import (
 from app.utils.create_resp import create_resp
 from flasgger import swag_from
 
-@app_views.route("/businesses", methods=["POST"], strict_slashes=False)
+@app_views_bp.route("/businesses", methods=["POST"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Businesses"],
@@ -60,7 +60,7 @@ def add_business_view():
     new_business = create_business(db.session, user_id, business_details)
     return create_resp(new_business.to_dict(), 201)
 
-@app_views.route("/businesses", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/businesses", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Businesses"],
@@ -115,7 +115,7 @@ def all_businesses_view():
     except NotFound as e:
         abort(404, description=str(e))
 
-@app_views.route("/businesses/<string:business_id>", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/businesses/<string:business_id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Businesses"],
@@ -150,7 +150,7 @@ def get_business_view(business_id):
     business = Business.get(business_id)
     return create_resp(business.to_dict())
 
-@app_views.route("/businesses/<string:business_id>", methods=["PUT"], strict_slashes=False)
+@app_views_bp.route("/businesses/<string:business_id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Businesses"],
@@ -209,7 +209,7 @@ def update_business_view(business_id):
     except Forbidden as e:
         abort(403, description=str(e))
 
-@app_views.route("/businesses/<string:business_id>", methods=["DELETE"], strict_slashes=False)
+@app_views_bp.route("/businesses/<string:business_id>", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Businesses"],

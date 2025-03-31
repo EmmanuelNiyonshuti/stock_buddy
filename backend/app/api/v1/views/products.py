@@ -1,6 +1,6 @@
 from flask import request, abort
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from app.api.v1.views import app_views
+from app.api.v1.views import app_views_bp
 from app.models.product import Product
 from app import db
 from app.utils.create_resp import create_resp
@@ -9,7 +9,7 @@ from app.services.product_services import (add_product,
                                            update_product)
 from flasgger import swag_from
 
-@app_views.route("/products", methods=["POST"], strict_slashes=False)
+@app_views_bp.route("/products", methods=["POST"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Products"],
@@ -59,7 +59,7 @@ def add_product_view():
     except Unauthorized as e:
         abort(401, description=str(e))
 
-@app_views.route("/products", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/products", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Products"],
@@ -122,7 +122,7 @@ def get_all_products_view():
     products = get_all_products(db.session, user_id, business_id, page, per_page)
     return create_resp(products)
 
-@app_views.route("/products/<string:product_id>", methods=["GET"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Products"],
@@ -157,7 +157,7 @@ def get_product_view(product_id):
     product = Product.get(product_id)
     return create_resp(product.to_dict())
 
-@app_views.route("/products/<string:product_id>", methods=["PUT"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Products"],
@@ -209,7 +209,7 @@ def update_product_view(product_id):
     updated_product = update_product(db.session, user_id, business_id, product_id, data)
     return create_resp(updated_product.to_dict())
 
-@app_views.route("/products/<string:product_id>", methods=["DELETE"], strict_slashes=False)
+@app_views_bp.route("/products/<string:product_id>", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
 @swag_from({
     "tags": ["Products"],
