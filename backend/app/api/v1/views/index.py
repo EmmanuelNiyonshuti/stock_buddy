@@ -23,7 +23,7 @@ from flasgger import swag_from
         }
     }
 })
-def stat():
+def status():
     return jsonify({
         "status": "OK"
     }), 200

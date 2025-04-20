@@ -8,4 +8,3 @@ relationship function and backref attribute.
 from app import db
 from .base_model import BaseModel
 from .user import User
-

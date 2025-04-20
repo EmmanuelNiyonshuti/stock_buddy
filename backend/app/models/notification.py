@@ -1,7 +1,7 @@
 """
 Notification model for managing business notifications.
 
-This module defines the Notification model, which represents notifications sent to users regarding business-related events. 
+This module defines the Notification model, which represents notifications sent to users regarding business-related activities. 
 It includes:
 - `recipient`: The recipient of the notification (e.g., business owner)
 - `message`: The content or body of the notification

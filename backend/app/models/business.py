@@ -19,7 +19,6 @@ class Business(BaseModel):
         secondary=user_business_association,
         back_populates="businesses"
         )
-
     notifications = relationship(
         "Notification",
         back_populates="business",

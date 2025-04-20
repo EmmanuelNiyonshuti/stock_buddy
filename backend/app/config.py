@@ -17,7 +17,7 @@ db_name = os.getenv("MYSQL_DEV_DB")
 
 class Config:
     SQLALCHEMY_DATABASE_URI="mysql+pymysql://{}:{}@{}/{}".format(db_username,
-        db_pwd, db_host, db_name)
+        db_pwd, db_host, db_name) if os.getenv("FLASK_ENV") == "Development" else os.getenv("MYSQL_PROD_DB_URI")
 
     MAIL_SERVER="smtp.googlemail.com"
     MAIL_PORT=587
@@ -28,12 +28,12 @@ class Config:
 
     JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY")
     JWT_ACCESS_COOKIE_NAME="access_cookie"
-    JWT_COOKIE_SECURE=False if os.getenv("ENV") == "Development" else True
+    JWT_COOKIE_SECURE=False if os.getenv("FLASK_ENV") == "Development" else True
     JWT_TOKEN_LOCATION=["cookies"]
     JWT_COOKIE_HTTPONLY=True
     JWT_COOKIE_SAMESITE="Lax"
     JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
-    JWT_COOKIE_CSRF_PROTECT=False if os.getenv("ENV") == "Development" else True
+    JWT_COOKIE_CSRF_PROTECT=False if os.getenv("FLASK_ENV") == "Development" else True
 
     CELERY={
         "broker_url":os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0"),

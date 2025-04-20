@@ -20,7 +20,6 @@ def get_all_products(db_session, user_id, business_id, page, per_page):
     association = db_session.query(user_business_association).filter_by(
         user_id=user_id, business_id=business_id
     ).first()
-
     if not association:
         raise Forbidden("You are not authorized to view this business's products.")
     query = Product.query.join(Inventory).filter(Inventory.business_id == business_id)

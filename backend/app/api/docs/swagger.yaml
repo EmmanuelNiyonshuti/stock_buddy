@@ -15,6 +15,8 @@ tags:
     description: "Health check endpoint"
   - name: Authentication
     description: "Endpoints related to user authentication"
+  - name: Account
+    description: "Endpoints related to User account"
   - name: Businesses
     description: "Endpoints for managing businesses"
   - name: Products

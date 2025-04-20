@@ -1,6 +1,6 @@
 from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import Forbidden, NotFound
 from app.api.v1.views import app_views_bp
 from app.models.product import Product
 from app import db

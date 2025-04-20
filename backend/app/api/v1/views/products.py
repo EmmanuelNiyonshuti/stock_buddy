@@ -1,9 +1,12 @@
 from flask import request, abort
+from werkzeug.exceptions import Unauthorized
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.api.v1.views import app_views_bp
 from app.models.product import Product
 from app import db
 from app.utils.create_resp import create_resp
+from app.utils.required_data import require_json
+from app.utils.required_data import require_data
 from app.services.product_services import (add_product,
                                            get_all_products,
                                            update_product)
@@ -50,9 +53,9 @@ from flasgger import swag_from
 })
 def add_product_view():
     require_json()
+    product_details = request.get_json()
     require_data(product_details, ["name", "price", "sku"], ["description"])
     user_id = get_jwt_identity()
-    product_details = request.get_json()
     try:
         new_product = add_product(db.session, user_id, product_details)
         return create_resp(new_product.to_dict(), 201)
@@ -120,6 +123,9 @@ def get_all_products_view():
     if not business_id:
         abort(400, description="business_id is required")
     products = get_all_products(db.session, user_id, business_id, page, per_page)
+    print(products)
+    if len(products.get("items")) == 0:
+        return create_resp(products.get("items"))
     return create_resp(products)
 
 @app_views_bp.route("/products/<string:product_id>", methods=["GET"], strict_slashes=False)

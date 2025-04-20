@@ -55,7 +55,7 @@ def user_registration_view():
     try:
         validate_email(user_details["email"])
     except EmailNotValidError:
-        abort(400, description="Invalid email address")
+        abort(400, description="Invalid email, Please use a valid email address")
     try:
         user_data = register_user(db.session, user_details)
         return create_auth_response(user_data, user_data, 201)

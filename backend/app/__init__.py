@@ -2,7 +2,7 @@
 Flask application factory.
 
 This module sets up the Flask application, configures extensions, and registers blueprints. 
-It follows the application factory pattern, allowing flexibility in configuration and testing.
+It follows the application factory pattern.
 
 Configured extensions:
 - SQLAlchemy (database ORM)
@@ -11,15 +11,15 @@ Configured extensions:
 - Flask-CORS (Cross-Origin Resource Sharing)
 - Flask-JWT-Extended (JWT-based authentication)
 """
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from .config import Config
-from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 from flasgger import Swagger
-import os
+from .config import Config
 from .celery_init import celery_init_app
 from dotenv import load_dotenv
 

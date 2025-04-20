@@ -1,5 +1,6 @@
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app import db
 from app.api.v1.views import app_views_bp
 from app.services.transaction_services import (create_transaction,
                                                get_product_transactions,
@@ -143,7 +144,7 @@ def get_product_transactions_view(product_id):
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
     transactions = get_product_transactions(db.session, user_id, page, per_page, product_id)
-    return create_resp(transactions)
+    return create_resp(transactions) if transactions["items"] else create_resp(transactions["items"])
 
 @app_views_bp.route("/products/<string:product_id>/transactions/<string:transaction_id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
