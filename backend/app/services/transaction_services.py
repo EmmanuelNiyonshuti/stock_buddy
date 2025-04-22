@@ -28,7 +28,6 @@ def create_transaction(db_session, user_id, product_id, transaction_details):
     )
     db_session.add(new_transaction)
     db_session.commit()
-
     return new_transaction
 
 def get_product_transactions(db_session, user_id, product_id, page, per_page):
