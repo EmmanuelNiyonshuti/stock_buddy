@@ -33,3 +33,4 @@ def test_get_product_transactions(db_session, setup_test_data):
     product, user = setup_test_data["product"], setup_test_data["user"]
     transactions = get_product_transactions(db_session, user.id, product.id, page=1, per_page=10)
     assert len(transactions["items"]) > 0
+

@@ -21,7 +21,7 @@ def get_all_businesses(db_session, user_id, page, per_page):
     businesses_query = Business.query.filter(Business.id.in_(business_ids))
     paginated_bsns = paginate_query(businesses_query, page, per_page)
     if not paginated_bsns["items"]:
-        return []
+        raise NotFound("Not found")
     return paginated_bsns
 
 def update_business_details(db_session, user_id, business_id, business_details):

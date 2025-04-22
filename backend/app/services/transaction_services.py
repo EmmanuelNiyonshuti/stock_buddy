@@ -31,7 +31,7 @@ def create_transaction(db_session, user_id, product_id, transaction_details):
 
     return new_transaction
 
-def get_product_transactions(db_session, user_id, page, per_page, product_id):
+def get_product_transactions(db_session, user_id, product_id, page, per_page):
     product = Product.get(product_id)
     associated_business = db_session.query(user_business_association).filter_by(user_id=user_id).first()
     if not associated_business:
