@@ -99,11 +99,8 @@ def user_login_view():
     require_json()
     login_details = request.get_json()
     require_data(login_details, ["email", "password"])
-    try:
-        user_data = login_user(login_details)
-        return create_auth_response(user_data)
-    except Unauthorized as e:
-        abort(401, description=str(e))
+    user_data = login_user(login_details)
+    return create_auth_response(user_data)
 
 @app_views_bp.route("/auth/logout", methods=["POST"], strict_slashes=False)
 @jwt_required()
@@ -145,5 +142,4 @@ def user_logout_view():
 })
 def refresh():
     user_id = get_jwt_identity()
-    user_data = {"id": user_id}
-    return create_auth_response(user_data, "Token refreshed successfully")
+    return create_auth_response({"id": user_id}, "Token refreshed successfully")

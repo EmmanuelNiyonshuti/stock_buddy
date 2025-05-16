@@ -49,5 +49,7 @@ def test_user_logout(auth_client):
 
 def test_refresh_token(auth_client):
     response = auth_client.post('/api/v1/auth/refresh')
+    print('Status code:', response.status_code)
     response_data = response.get_json()
+    print('Data', response_data)
     assert response.status_code == 200

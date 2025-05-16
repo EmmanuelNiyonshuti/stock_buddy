@@ -8,3 +8,6 @@ This project is built using the **Flask** microframework for its simplicity and 
 The API is fully documented using **Swagger** through **Flasgger**, allowing developers to explore and test endpoints directly from an interactive interface.
 
 Currently, the API provides essential endpoints for managing stock, products, and transactions. A frontend interface may be developed in the future to enhance user interaction.
+
+## LICENCE
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.

@@ -8,6 +8,7 @@ products, transactions, inventory, and user management.
 """
 from flask import Blueprint, request, current_app
 from app.utils.decorators import handle_exceptions
+from app.utils.required_data import require_json
 
 app_views_bp = Blueprint("app_views_bp", __name__, url_prefix="/api/v1")
 

@@ -22,7 +22,8 @@ This is the backend of **stock_buddy**, a simple yet scalable RESTful API design
 ### Prerequisites
 Make sure you have the following installed:
 - Python 3.8+
-- MySQL
+- MySQL 9+
+- redis 7+
 - Virtualenv (optional but recommended)
 
 ### Installation Steps
@@ -34,15 +35,32 @@ Make sure you have the following installed:
    ```
 
 2. **Create a virtual environment and activate it**
+   1. Option 1: Using pip
    ```sh
    python -m venv venv
-   source venv/bin/activate  # On Windows use: venv\Scripts\activate
-   ```
 
-3. **Install dependencies**
-   ```sh
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
    pip install -r requirements.txt
    ```
+
+   2. Option 2: Using **uv**
+      1. make sure uv is installed on your host
+         -  install **uv** by: 
+         ```sh
+         curl -LsSf https://astral.sh/uv/install.sh | sh # on macOs and Linux
+         powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"   on windows
+         ```
+      -  Then add uv to your PATH if it’s not already.
+      2. Create and Activate the virtual environment:
+         ```sh
+         uv venv .venv
+         source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+         ```
+      3. Sync dependencies (from uv.lock):
+         ```sh
+         uv sync
+         ```
 
 4. **Set up environment variables**
    Create a `.env` file in the `backend/` directory and add the required configurations:
@@ -62,6 +80,10 @@ Make sure you have the following installed:
    ```sh
    python3 run.py
    ```
+   alternatively you can use: 
+   ```sh
+   uv run run.y
+   ```
 
 The API will now be running at `http://127.0.0.1:5000/`.
 
@@ -70,3 +92,19 @@ The API will now be running at `http://127.0.0.1:5000/`.
 For a full list of available endpoints, visit the Swagger API Docs at:
 `http://127.0.0.1:5000/apidocs`
 
+
+7. Running the application with Docker.
+      1. Ensure Docker is installed on your system
+         - [Install Docker](https://docs.docker.com/get-docker/) if you haven't already
+
+      2. Build the Docker image
+         
+         from the backend directory, run:
+            ```sh
+               docker build -t stock_buddy_restapi .
+            ```
+      3. Run the Docker container
+         ```sh
+         docker run -p 5000:5000 stock_buddy_restapi
+         ```
+         * The API will now be accessible at: `http://127.0.0.1:5000/`.
