@@ -8,7 +8,7 @@ from app.models.user import User
 def register_user(db_session, user_details):
     existing_user = User.query.filter_by(email=user_details["email"]).first()
     if existing_user:
-        raise ValueError(f"{user_details["email"]} is already taken. please use another email.")
+        raise ValueError(f"{user_details['email']} is already taken. please use another email.")
     pwd_hash = bcrypt.generate_password_hash(user_details["password"]).decode("utf-8")
     new_user = User(
         username=user_details["username"],
