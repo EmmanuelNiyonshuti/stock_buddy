@@ -53,10 +53,12 @@ def create_app(config_class=Config, testing=False):
     migrate.init_app(app, db)
     jwt.init_app(app)
     swagger = Swagger(app, template_file=os.path.join(os.path.dirname(__file__), 'api/docs/swagger.yaml'))
-    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    cors.init_app(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
     celery_init_app(app)
 
     from .api.v1.views import app_views_bp
     app.register_blueprint(app_views_bp)
+    from commands import register_commands
+    register_commands(app)
 
     return app
